@@ -1,0 +1,27 @@
+name: Daily 50 Commits
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make 50 commits
+        run: |
+          for i in $(seq 1 50); do
+            echo "Commit #$i on $(date)" >> activity.log
+            git add activity.log
+            git commit -m "Daily commit $i - $(date)"
+          done
+
+      - name: Push changes
+        run: |
+          git push
